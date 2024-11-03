@@ -1,6 +1,6 @@
 import logging
 from telegram import Update, KeyboardButton, ReplyKeyboardMarkup
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
+from telegram.ext import Updater, CommandHandler, MessageHandler, CallbackContext, filters
 
 # Set up logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
@@ -64,13 +64,14 @@ def main():
     dp = updater.dispatcher
 
     dp.add_handler(CommandHandler("start", start))
-    dp.add_handler(MessageHandler(Filters.text & ~Filters.command, handle_language))
-    dp.add_handler(MessageHandler(Filters.text & ~Filters.command, handle_name))
-    dp.add_handler(MessageHandler(Filters.text & ~Filters.command, handle_description))
-    dp.add_handler(MessageHandler(Filters.text & ~Filters.command, handle_start_message))
+    dp.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_language))
+    dp.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_name))
+    dp.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_description))
+    dp.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_start_message))
 
     updater.start_polling()
     updater.idle()
 
 if __name__ == '__main__':
     main()
+
