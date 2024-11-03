@@ -29,8 +29,8 @@ def get_messages():
     return jsonify({"messages": messages})
 
 def run_flask_app():
-    app.run(port=5000)
-    
+    app.run(port=5001)  # Changed port to 5001
+
 # Start Flask app in a separate thread
 threading.Thread(target=run_flask_app).start()
 
@@ -58,7 +58,7 @@ async def handle_language(update: Update, context: CallbackContext):
     chat_id = query.message.chat.id
     username = update.effective_user.username
     
-    if chat_id not in user_data:
+    if username not in user_data:
         user_data[username] = {}  # Initialize user data if not already present
 
     user_data[username]['language'] = query.data
@@ -68,19 +68,17 @@ async def handle_language(update: Update, context: CallbackContext):
 
 # Handle the name input
 async def handle_name(update: Update, context: CallbackContext):
-    chat_id = update.effective_chat.id
     username = update.effective_user.username
     user_data[username]['name'] = update.message.text
-    await context.bot.send_photo(chat_id=chat_id, photo=open('aLC_description.jpg', 'rb'))
+    await context.bot.send_photo(chat_id=update.effective_chat.id, photo=open('aLC_description.jpg', 'rb'))
     await update.message.reply_text("Please provide a description.")
     return DESCRIPTION
 
 # Handle the description input
 async def handle_description(update: Update, context: CallbackContext):
-    chat_id = update.effective_chat.id
     username = update.effective_user.username
     user_data[username]['description'] = update.message.text
-    await context.bot.send_photo(chat_id=chat_id, photo=open('aLC_message.jpg', 'rb'))
+    await context.bot.send_photo(chat_id=update.effective_chat.id, photo=open('aLC_message.jpg', 'rb'))
     await update.message.reply_text("Enter the start message for customers in chat.")
     return START_MESSAGE
 
@@ -145,7 +143,7 @@ def main():
     application.add_handler(conv_handler)
 
     # Start the bot and the task for sending website messages to Telegram
-    application.run_polling(asyncio_run=True)
+    application.run_polling()
     asyncio.get_event_loop().create_task(send_website_messages_to_telegram(application.bot))
 
 if __name__ == '__main__':
