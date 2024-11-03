@@ -60,7 +60,7 @@ def generate_chat_id():
 
 # Main function to start the bot
 def main():
-    updater = Updater("7637744571:AAH5dNLsd-kXReU7MSfEiy5W3nrqFecMazo", use_context=True)
+    updater = Updater("7637744571:AAH5dNLsd-kXReU7MSfEiy5W3nrqFecMazo")
     dp = updater.dispatcher
 
     dp.add_handler(CommandHandler("start", start))
