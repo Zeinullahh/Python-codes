@@ -34,14 +34,21 @@ def run_flask_app(): app.run(port=5000)
 threading.Thread(target=run_flask_app).start()
 # Start command
 async def start(update: Update, context: CallbackContext):
-    user_data[update.effective_chat.id] = {}  # Create a new user data entry
+    username = update.effective_user.username
+    user_data[username] = {} # Create a new user data entry for the username
     buttons = [
         [InlineKeyboardButton("🇺🇸 English", callback_data='English')],
         [InlineKeyboardButton("🇷🇺 Русский", callback_data='Russian')]
     ]
     reply_markup = InlineKeyboardMarkup(buttons)
+    
+    # Fetch and store the chat ID
+    chat_id = update.effective_chat.id
+    user_data[username]['chat_id'] = chat_id
+    
     await update.message.reply_text("Please choose your language:", reply_markup=reply_markup)
     return LANGUAGE
+
 
 # Handle language selection
 async def handle_language(update: Update, context: CallbackContext):
@@ -69,9 +76,11 @@ async def handle_description(update: Update, context: CallbackContext):
 # Handle the start message input
 
 async def handle_start_message(update: Update, context: CallbackContext):
-    user_data[update.effective_chat.id]['start_message'] = update.message.text
-    chat_name = user_data[update.effective_chat.id]['name']
-    chat_description = user_data[update.effective_chat.id]['description']
+    username = update.effective_user.username
+    user_data[username]['start_message'] = update.message.text
+    chat_name = user_data[username]['name']
+    chat_description = user_data[username]['description']
+    chat_id = user_data[username]['chat_id']
     
     # Basic live chat JavaScript code to be embedded in the website
     script = f"""
@@ -79,7 +88,8 @@ async def handle_start_message(update: Update, context: CallbackContext):
     window.liveChatSettings = {{
         name: '{chat_name}',
         description: '{chat_description}',
-        startMessage: '{user_data[update.effective_chat.id]['start_message']}'
+        startMessage: '{user_data[username]['start_message']}',
+        chatId: '{chat_id}'
     }};
     (function(u) {{
         var s = document.createElement('script');
@@ -97,13 +107,19 @@ async def handle_start_message(update: Update, context: CallbackContext):
     return ConversationHandler.END
 
 
+
 # Function to send messages from the website to Telegram
 async def send_website_messages_to_telegram(context: CallbackContext):
     while True:
         if messages:
             msg = messages.pop(0)
-            await context.bot.send_message(chat_id=<YOUR_TELEGRAM_CHAT_ID>, text=msg)
+            # Assuming a single user for simplicity; modify logic for multiple users if needed
+            username = next(iter(user_data))  # Get the first username in user_data
+            chat_id = user_data[username]['chat_id']
+            await context.bot.send_message(chat_id=chat_id, text=msg)
         await asyncio.sleep(1)
+
+
 
 # Function to generate a unique chat ID
 def generate_chat_id():
