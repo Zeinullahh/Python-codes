@@ -2,6 +2,9 @@ import asyncio
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, CallbackContext, filters
 
+# Global user data storage
+user_data = {}
+
 # Handle the start command
 async def start(update: Update, context: CallbackContext):
     user_data[update.effective_chat.id] = {}  # Create a new user data entry
@@ -12,7 +15,6 @@ async def start(update: Update, context: CallbackContext):
 # Handle language selection
 async def handle_language(update: Update, context: CallbackContext):
     user_data[update.effective_chat.id]['language'] = update.message.text
-    await context.bot.send_photo(chat_id=update.effective_chat.id, photo='URL_TO_YOUR_IMAGE')  # Add your image URL here
     await update.message.reply_text("Let's connect your website to aLiveChat!\nPlease, name it.")
 
 # Handle the name input
@@ -61,5 +63,10 @@ async def main():
     await application.run_polling()
 
 if __name__ == '__main__':
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(main())
+    try:
+        asyncio.run(main())
+    except RuntimeError as e:
+        if str(e) == "This event loop is already running":
+            print("An event loop is already running. The bot might already be active.")
+        else:
+            raise
