@@ -52,22 +52,23 @@ async def handle_start_message(update: Update, context: CallbackContext):
     chat_id = generate_chat_id()  # Create a unique chat ID or script ID here (e.g., UUID)
 
     # Basic live chat JavaScript code to be embedded in the website
-    script = f"""
-<script>
-(function() {{
-    var chatIframe = document.createElement('iframe');
-    chatIframe.src = 'https://example.com/live-chat?chat_id={chat_id}';
-    chatIframe.style.position = 'fixed';
-    chatIframe.style.bottom = '20px';
-    chatIframe.style.right = '20px';
-    chatIframe.style.width = '350px';
-    chatIframe.style.height = '400px';
-    chatIframe.style.border = 'none';
-    chatIframe.style.zIndex = '1000';
-    document.body.appendChild(chatIframe);
-})();
-</script>
-"""
+    script = """
+    <script>
+    (function() {{
+        var chatIframe = document.createElement('iframe');
+        chatIframe.src = 'https://example.com/live-chat?chat_id={chat_id}';
+        chatIframe.style.position = 'fixed';
+        chatIframe.style.bottom = '20px';
+        chatIframe.style.right = '20px';
+        chatIframe.style.width = '350px';
+        chatIframe.style.height = '400px';
+        chatIframe.style.border = 'none';
+        chatIframe.style.zIndex = '1000';
+        document.body.appendChild(chatIframe);
+    })();
+    </script>
+    """.format(chat_id=chat_id)
+
 
     await update.message.reply_text("Chat has been created!")
     await update.message.reply_text("Here is your script to embed in your website:")
