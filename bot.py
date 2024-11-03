@@ -1,6 +1,8 @@
 import logging
 from telegram import Update, KeyboardButton, ReplyKeyboardMarkup
-from telegram.ext import Updater, CommandHandler, MessageHandler, CallbackContext, filters
+from telegram import Update
+from telegram.ext import Application, CommandHandler, MessageHandler, CallbackContext, filters
+
 
 # Set up logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
@@ -60,17 +62,15 @@ def generate_chat_id():
 
 # Main function to start the bot
 def main():
-    updater = Updater("7637744571:AAH5dNLsd-kXReU7MSfEiy5W3nrqFecMazo")
-    dp = updater.dispatcher
+    application = Application.builder().token("7637744571:AAH5dNLsd-kXReU7MSfEiy5W3nrqFecMazo").build()
 
-    dp.add_handler(CommandHandler("start", start))
-    dp.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_language))
-    dp.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_name))
-    dp.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_description))
-    dp.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_start_message))
+    application.add_handler(CommandHandler("start", start))
+    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_language))
+    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_name))
+    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_description))
+    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_start_message))
 
-    updater.start_polling()
-    updater.idle()
+    application.run_polling()
 
 if __name__ == '__main__':
     main()
