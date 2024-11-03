@@ -1,5 +1,5 @@
 import asyncio
-from telegram import Update
+from telegram import Update, KeyboardButton, ReplyKeyboardMarkup
 from telegram.ext import Application, CommandHandler, MessageHandler, CallbackContext, filters
 
 # Global user data storage
@@ -64,9 +64,17 @@ async def main():
 
 if __name__ == '__main__':
     try:
-        asyncio.run(main())
+        # Check if there's an existing event loop
+        loop = asyncio.get_event_loop()
+        if loop.is_running():
+            print("An event loop is already running. Starting the bot using the existing loop.")
+            # Run the main function in the existing loop
+            loop.create_task(main())
+        else:
+            # No event loop running, so run normally
+            asyncio.run(main())
     except RuntimeError as e:
         if str(e) == "This event loop is already running":
-            print("An event loop is already running. The bot might already be active.")
+            print("An event loop is already running.")
         else:
             raise
