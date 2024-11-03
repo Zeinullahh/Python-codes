@@ -19,17 +19,19 @@ async def start(update: Update, context: CallbackContext):
 # Handle language selection
 async def handle_language(update: Update, context: CallbackContext):
     user_data[update.effective_chat.id]['language'] = update.message.text
-    await context.bot.send_photo(chat_id=update.effective_chat.id, photo='URL_TO_YOUR_IMAGE')  # Add your image URL here
+    await context.bot.send_photo(chat_id=update.effective_chat.id, photo=open('aLC_name.jpg', 'rb'))
     await update.message.reply_text("Let's connect your website to aLiveChat!\nPlease, name it.")
 
 # Handle the name input
 async def handle_name(update: Update, context: CallbackContext):
     user_data[update.effective_chat.id]['name'] = update.message.text
+    await context.bot.send_photo(chat_id=update.effective_chat.id, photo=open('aLC_description.jpg', 'rb'))
     await update.message.reply_text("Please provide a description.")
 
 # Handle the description input
 async def handle_description(update: Update, context: CallbackContext):
     user_data[update.effective_chat.id]['description'] = update.message.text
+    await context.bot.send_photo(chat_id=update.effective_chat.id, photo=open('aLC_message.jpg', 'rb'))
     await update.message.reply_text("Enter the start message for customers in chat.")
 
 # Handle the start message input
