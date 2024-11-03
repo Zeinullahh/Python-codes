@@ -1,3 +1,4 @@
+import asyncio
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, CallbackContext, filters
 
@@ -27,7 +28,6 @@ async def handle_description(update: Update, context: CallbackContext):
 # Handle the start message input
 async def handle_start_message(update: Update, context: CallbackContext):
     user_data[update.effective_chat.id]['start_message'] = update.message.text
-    # Create a unique chat ID or script ID here (e.g., UUID)
     chat_id = generate_chat_id()  # Implement this function to generate unique IDs
     script = f"""
 <script>
@@ -61,5 +61,5 @@ async def main():
     await application.run_polling()
 
 if __name__ == '__main__':
-    import asyncio
-    asyncio.run(main())
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(main())
