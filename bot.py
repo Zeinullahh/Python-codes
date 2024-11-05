@@ -112,6 +112,13 @@ async def handle_start_message(update: Update, context: CallbackContext):
                         chat_id: '{update.effective_chat.id}',
                         message: message
                     }})
+                }})
+                .then(response => response.json())
+                .then(data => {{
+                    console.log('Success:', data);
+                }})
+                .catch((error) => {{
+                    console.error('Error:', error);
                 }});
             }}
         }});
