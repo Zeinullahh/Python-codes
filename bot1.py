@@ -19,6 +19,9 @@ START_MESSAGE = ""
 
 # Start command
 async def start(update: Update, context: CallbackContext):
+    global CHAT_ID
+    CHAT_ID = update.effective_chat.id  # Set CHAT_ID dynamically for testing
+    print(f"Chat ID is: {CHAT_ID}")  # Log the chat ID
     buttons = [
         [InlineKeyboardButton("🇺🇸 English", callback_data='English')],
         [InlineKeyboardButton("🇷🇺 Русский", callback_data='Russian')]
