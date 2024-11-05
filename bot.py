@@ -126,7 +126,8 @@ async def handle_start_message(update: Update, context: CallbackContext):
 
 # Main function to start the bot
 def main():
-    application = Application.builder().token(os.getenv("7637744571:AAH5dNLsd-kXReU7MSfEiy5W3nrqFecMazo")).build()
+    TELEGRAM_TOKEN = '7637744571:AAH5dNLsd-kXReU7MSfEiy5W3nrqFecMazo'
+    application = Application.builder().token(TELEGRAM_TOKEN).build()
 
     conv_handler = ConversationHandler(
         entry_points=[CommandHandler("start", start)],
