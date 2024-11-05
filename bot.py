@@ -103,7 +103,7 @@ async def handle_start_message(update: Update, context: CallbackContext):
                 chatMessages.scrollTop = chatMessages.scrollHeight;
 
                 // Send message to the server
-                fetch('https://your-server.com/send_message', {{
+                fetch('https://35.209.220.223:5000/webhook', {{
                     method: 'POST',
                     headers: {{
                         'Content-Type': 'application/json'
