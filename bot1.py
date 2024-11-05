@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 # Define states for the conversation
 LANGUAGE, NAME, DESCRIPTION, START_MESSAGE = range(4)
 
-# Fixed variables for one user
+# Initialize global variables
 CHAT_ID = 123456789  # Replace with the actual chat ID
 LANGUAGE_CHOICE = ""
 NAME = ""
@@ -21,7 +21,6 @@ START_MESSAGE = ""
 async def start(update: Update, context: CallbackContext):
     global CHAT_ID
     CHAT_ID = update.effective_chat.id  # Set CHAT_ID dynamically for testing
-    print(f"Chat ID is: {CHAT_ID}")  # Log the chat ID
     buttons = [
         [InlineKeyboardButton("🇺🇸 English", callback_data='English')],
         [InlineKeyboardButton("🇷🇺 Русский", callback_data='Russian')]
@@ -61,12 +60,7 @@ async def handle_start_message(update: Update, context: CallbackContext):
     global START_MESSAGE
     START_MESSAGE = update.message.text
     
-    # Read the contents of the livechat.js file
-    script_path = os.path.join(os.path.dirname(__file__), 'livechat.js')
-    with open(script_path, 'r') as file:
-        livechat_js = file.read()
-
-    # Basic live chat JavaScript code to be embedded in the website
+    # JavaScript code to be embedded in the website
     script = f"""
     <script>
     window.liveChatSettings = {{
@@ -74,8 +68,8 @@ async def handle_start_message(update: Update, context: CallbackContext):
         description: '{DESCRIPTION}',
         startMessage: '{START_MESSAGE}'
     }};
-    {livechat_js}
     </script>
+    <script src="http://35.209.231.50/home/zikosh004/livechat.js"></script>
     """
 
     await update.message.reply_text("Chat has been created!")
