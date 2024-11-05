@@ -50,6 +50,7 @@ async def handle_description(update: Update, context: CallbackContext):
 # Handle the start message input
 
 # Handle the start message input
+# Handle the start message input
 async def handle_start_message(update: Update, context: CallbackContext):
     user_data[update.effective_chat.id]['start_message'] = update.message.text
     chat_name = user_data[update.effective_chat.id]['name']
@@ -109,9 +110,9 @@ async def handle_start_message(update: Update, context: CallbackContext):
     </script>
     """
 
-    # Send the script to the user
+    # Send the script to the user without HTML formatting
     await update.message.reply_text("Here is your live chat script. Embed it in your website's HTML:")
-    await update.message.reply_text(f"<pre>{script}</pre>", parse_mode='HTML')
+    await update.message.reply_text(script)
     return ConversationHandler.END
 
 # Function to generate a unique chat ID
