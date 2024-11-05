@@ -66,7 +66,7 @@ async def handle_start_message(update: Update, context: CallbackContext):
         var chatWidget = document.createElement('div');
         chatWidget.id = 'liveChatWidget';
         chatWidget.style.position = 'fixed';
-        chatWidget.style.bottom = '20px';
+        chatWidget.style.bottom = '60px';  // Adjusted to be higher
         chatWidget.style.right = '20px';
         chatWidget.style.width = '300px';
         chatWidget.style.height = '400px';
