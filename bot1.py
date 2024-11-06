@@ -132,7 +132,7 @@ async def handle_start_message(update: Update, context: CallbackContext):
     return ConversationHandler.END
 
 # Main function to start the bot
-def main():
+async def main():
     TELEGRAM_TOKEN = '7637744571:AAH5dNLsd-kXReU7MSfEiy5W3nrqFecMazo'
     application = Application.builder().token(TELEGRAM_TOKEN).build()
 
@@ -150,8 +150,9 @@ def main():
     application.add_handler(conv_handler)
 
     # Set webhook
-    application.bot.set_webhook(url='https://alivechat.shop/webhook')
+    await application.bot.set_webhook(url='https://alivechat.shop/webhook')
 
+    # Run the application with webhook
     application.run_webhook(
         listen="0.0.0.0",
         port=443,
@@ -164,4 +165,5 @@ def main():
     )
 
 if __name__ == '__main__':
-    main()
+    import asyncio
+    asyncio.run(main())
