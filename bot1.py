@@ -48,9 +48,6 @@ async def handle_description(update: Update, context: CallbackContext):
     return START_MESSAGE
 
 # Handle the start message input
-
-# Handle the start message input
-# Handle the start message input
 async def handle_start_message(update: Update, context: CallbackContext):
     user_data[update.effective_chat.id]['start_message'] = update.message.text
     chat_name = user_data[update.effective_chat.id]['name']
@@ -69,7 +66,7 @@ async def handle_start_message(update: Update, context: CallbackContext):
         var chatWidget = document.createElement('div');
         chatWidget.id = 'liveChatWidget';
         chatWidget.style.position = 'fixed';
-        chatWidget.style.bottom = '20px';
+        chatWidget.style.bottom = '60px';  // Adjusted to be higher
         chatWidget.style.right = '20px';
         chatWidget.style.width = '300px';
         chatWidget.style.height = '400px';
@@ -104,6 +101,25 @@ async def handle_start_message(update: Update, context: CallbackContext):
                 chatMessages.appendChild(messageElement);
                 chatInput.value = '';
                 chatMessages.scrollTop = chatMessages.scrollHeight;
+
+                // Send message to the server
+                fetch('https://alivechat.shop/webhook', {{
+                    method: 'POST',
+                    headers: {{
+                        'Content-Type': 'application/json'
+                    }},
+                    body: JSON.stringify({{
+                        chat_id: '{update.effective_chat.id}',
+                        message: message
+                    }})
+                }})
+                .then(response => response.json())
+                .then(data => {{
+                    console.log('Success:', data);
+                }})
+                .catch((error) => {{
+                    console.error('Error:', error);
+                }});
             }}
         }});
     }})();
@@ -115,14 +131,10 @@ async def handle_start_message(update: Update, context: CallbackContext):
     await update.message.reply_text(script)
     return ConversationHandler.END
 
-# Function to generate a unique chat ID
-def generate_chat_id():
-    import uuid
-    return str(uuid.uuid4())
-
 # Main function to start the bot
 def main():
-    application = Application.builder().token("7637744571:AAH5dNLsd-kXReU7MSfEiy5W3nrqFecMazo").build()
+    TELEGRAM_TOKEN = '7637744571:AAH5dNLsd-kXReU7MSfEiy5W3nrqFecMazo'
+    application = Application.builder().token(TELEGRAM_TOKEN).build()
 
     conv_handler = ConversationHandler(
         entry_points=[CommandHandler("start", start)],
