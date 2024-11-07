@@ -153,11 +153,15 @@ async def main():
     await application.bot.set_webhook(url='https://alivechat.shop/webhook')
 
     # Run the application with webhook
-    application.run_webhook(
+    await application.run_webhook(
         listen="0.0.0.0",
         port=443,
         url_path="/webhook",
-        webhook_url="https://alivechat.shop/webhook"
+        webhook_url="https://alivechat.shop/webhook",
+        ssl_context=(
+            '/etc/letsencrypt/live/alivechat.shop/fullchain.pem',
+            '/etc/letsencrypt/live/alivechat.shop/privkey.pem'
+        )
     )
 
 if __name__ == '__main__':
