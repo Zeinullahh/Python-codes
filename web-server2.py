@@ -25,6 +25,4 @@ def send_message(chat_id, text):
     requests.post(url, json={'chat_id': chat_id, 'text': text})
 
 if __name__ == '__main__':
-    # Use SSL context to run the server on HTTPS
-    context = ('/etc/letsencrypt/live/alivechat.shop/fullchain.pem', '/etc/letsencrypt/live/alivechat.shop/privkey.pem')
-    app.run(host="0.0.0.0", port=443, ssl_context=context)
+    app.run(host="0.0.0.0", port=5000)
