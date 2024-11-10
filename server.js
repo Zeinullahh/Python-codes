@@ -1,3 +1,4 @@
+require('dotenv').config();
 const request = require('request');
 const compression = require('compression');
 const cors = require('cors');
@@ -6,6 +7,9 @@ const bodyParser = require('body-parser');
 const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
+
+const port = process.env.SERVER_PORT || 3000;
+const telegramBotToken = process.env.TELEGRAM_BOT_TOKEN;
 
 app.use(express.static('dist', {index: 'demo.html', maxage: '4h'}));
 app.use(compression());
@@ -35,56 +39,22 @@ app.post('/hook', function(req, res){
         }
 
     } catch (e) {
-        console.error("hook error", e, req.body);
+        console.error(e);
     }
-    res.statusCode = 200;
-    res.end();
+    res.sendStatus(200);
 });
 
-// handle chat visitors websocket messages
-io.on('connection', function(client){
-
-    client.on('register', function(registerMsg){
-        let userId = registerMsg.userId;
-        let chatId = registerMsg.chatId;
-        let messageReceived = false;
-        console.log("useId " + userId + " connected to chatId " + chatId);
-
-        client.on('message', function(msg) {
-            messageReceived = true;
-            io.emit(chatId + "-" + userId, msg);
-            sendTelegramMessage(chatId, userId + ": " + msg.text);
-        });
-
-        client.on('disconnect', function(){
-            if (messageReceived) {
-                sendTelegramMessage(chatId, userId + " has left");
-            }
-        });
-    });
-
+http.listen(port, function(){
+    console.log('listening on *:' + port);
 });
 
 function sendTelegramMessage(chatId, text) {
-    request
-        .post('https://api.telegram.org/bot' + process.env.TELEGRAM_TOKEN + '/sendMessage')
-        .form({
-            "chat_id": chatId,
-            "text": text,
-            "parse_mode": "Markdown"
-        });
+    const url = `https://api.telegram.org/bot${telegramBotToken}/sendMessage`;
+    request.post(url, {
+        json: {
+            chat_id: chatId,
+            text: text,
+            parse_mode: 'Markdown'
+        }
+    });
 }
-
-app.post('/usage', cors(), function(req, res) {
-    console.log('usage from', req.query.host);
-    res.statusCode = 200;
-    res.end();
-});
-
-http.listen(process.env.PORT || 3000, function(){
-    console.log('listening on port:' + (process.env.PORT || 3000));
-});
-
-app.get("/.well-known/acme-challenge/:content", (req, res) => {
-    res.send(process.env.CERTBOT_RESPONSE);
-});
